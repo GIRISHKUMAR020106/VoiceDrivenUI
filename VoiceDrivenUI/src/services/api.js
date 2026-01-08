@@ -1,57 +1,45 @@
 import axios from "axios";
 
-// Change this if backend runs on a different host/port
+// Backend base URL
 const API_BASE_URL = "http://127.0.0.1:8000";
 
-// Create axios instance
+// Axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 /* -----------------------------------
-   TEXT / VOICE FLOW (NO AUDIO UPLOAD)
+   TEXT COMMAND FLOW (CURRENT)
 ----------------------------------- */
 
 /**
- * Send text input to backend (/voice)
- * This matches your FastAPI text-based voice route
+ * Send text command to backend
+ * Matches: POST /text/process
  */
 export const sendTextCommand = async (text) => {
-  const response = await api.post("/voice", null, {
+  const response = await api.post("/text/process", null, {
     params: { text },
   });
   return response.data;
 };
 
 /* -----------------------------------
-   SANITY / TEST ENDPOINTS
+   TEST / HEALTH ENDPOINTS
 ----------------------------------- */
 
-/**
- * Test DB connection
- */
 export const testDB = async () => {
-  const response = await api.post("/test/db");
+  const response = await api.get("/test/db");
   return response.data;
 };
 
-/**
- * Test Redis connection
- */
 export const testRedis = async () => {
-  const response = await api.post("/test/redis");
+  const response = await api.get("/test/redis");
   return response.data;
 };
 
-/**
- * Test full DB + Redis workflow
- */
 export const testFullFlow = async () => {
-  const response = await api.post("/test/full");
+  const response = await api.get("/test/full");
   return response.data;
 };
 
