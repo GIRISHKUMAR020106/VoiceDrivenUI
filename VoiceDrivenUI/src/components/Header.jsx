@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { UserButton } from "@clerk/clerk-react"; // Import the Clerk User Button
 
 export default function Header() {
   const [darkMode, setDarkMode] = useState(true);
@@ -18,7 +19,13 @@ export default function Header() {
   };
 
   return (
-    <header style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+    <header style={{ 
+      gridColumn: '1 / -1', 
+      display: 'flex', 
+      justifyContent: 'space-between', 
+      alignItems: 'center', 
+      marginBottom: '10px' 
+    }}>
       <div>
         <h1 style={{ 
           fontSize: '2.5rem', fontWeight: '900', margin: 0,
@@ -31,13 +38,26 @@ export default function Header() {
         <p style={{ margin: '5px 0 0', opacity: 0.8, fontSize: '0.9rem' }}>Next-Generation Voice Budgeting</p>
       </div>
 
-      <button onClick={toggleTheme} style={{
-        background: 'var(--glass-highlight)', border: 'var(--glass-border)',
-        padding: '10px 20px', borderRadius: '50px', color: 'var(--text-main)',
-        backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', gap: '8px'
-      }}>
-        {darkMode ? '☀️ Light' : '🌙 Dark'}
-      </button>
+      {/* Right-side actions: Theme Toggle + Clerk User Button */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+        <button onClick={toggleTheme} style={{
+          background: 'rgba(255, 255, 255, 0.1)', // Changed to standard rgba for fallback
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          padding: '10px 20px', 
+          borderRadius: '50px', 
+          color: 'var(--text-main)',
+          backdropFilter: 'blur(10px)', 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '8px',
+          cursor: 'pointer'
+        }}>
+          {darkMode ? '☀️ Light' : '🌙 Dark'}
+        </button>
+
+        {/* User profile dropdown automatically handled by Clerk */}
+        <UserButton afterSignOutUrl="/" /> 
+      </div>
     </header>
   );
 }
