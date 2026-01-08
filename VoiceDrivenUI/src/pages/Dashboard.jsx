@@ -15,16 +15,6 @@ export default function Dashboard() {
   return (
     <div className="container">
       {/* Theme Toggle */}
-      <div style={{ textAlign: "right", marginBottom: "10px" }}>
-        <button
-          onClick={() =>
-            setTheme(theme === "light" ? "dark" : "light")
-          }
-          className="secondary"
-        >
-          {theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
-        </button>
-      </div>
 
       <Header />
 
