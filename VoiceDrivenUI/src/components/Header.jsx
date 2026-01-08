@@ -26,7 +26,7 @@ export default function Header() {
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
           filter: 'drop-shadow(0 2px 10px rgba(129, 140, 248, 0.2))'
         }}>
-          VoxFi – A Voice-Driven Finance Assistant
+          VoxFin – A Voice-Driven Finance Assistant
         </h1>
         <p style={{ margin: '5px 0 0', opacity: 0.8, fontSize: '0.9rem' }}>Next-Generation Voice Budgeting</p>
       </div>

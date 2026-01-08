@@ -273,3 +273,333 @@ button {
 .float {
   animation: float 6s ease-in-out infinite;
 }
+/* The Listening State class */
+.is-listening {
+  position: relative;
+  background: var(--danger) !important; /* Visual cue that it's "On" */
+  animation: pulse-red 2s infinite;
+}
+
+.is-listening::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 12px; /* Match your button radius */
+  border: 2px solid #ef4444;
+  animation: ripple 1.5s ease-out infinite;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-red {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+/* Guide Grid Styling */
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.guide-item {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.guide-icon {
+  font-size: 1.2rem;
+  background: rgba(129, 140, 248, 0.1);
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.guide-item p {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* Smooth Entrance Animation */
+.guide-animation {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Status Pulse Dot */
+.pulse-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #818cf8;
+  border-radius: 50%;
+  margin-right: 10px;
+  animation: statusPulse 1.5s infinite;
+}
+
+@keyframes statusPulse {
+  0% { opacity: 0.3; }
+  50% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+/* Layout Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr; /* Balanced two-column layout */
+  gap: 30px;
+  align-items: start;
+}
+
+/* Big Help Button Styling */
+.big-help-btn {
+  width: 100%;
+  height: 250px; /* Large target area */
+  background: var(--card-bg);
+  border: 2px dashed var(--card-border);
+  border-radius: 18px;
+  color: var(--text-main);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.big-help-btn:hover {
+  background: rgba(129, 140, 248, 0.1);
+  border-color: #818cf8;
+  transform: translateY(-5px);
+}
+
+.big-help-btn span {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.big-help-btn p {
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+
+/* Help Box Internal Styles */
+.help-box {
+  min-height: 250px;
+  border-left: 4px solid #818cf8;
+}
+
+.guide-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.close-link {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Responsive fix for smaller screens */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* Make the grid take up the majority of the screen height */
+.dashboard-grid.fill-page {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 30px;
+  flex: 1; /* Takes up remaining space in the container */
+  align-items: stretch; /* Forces columns to be equal height */
+  margin-bottom: 40px;
+}
+
+/* Ensure boxes fill their parent height */
+.full-height {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* Spread the guide items vertically */
+.guide-list.spread {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around; /* Distributes items evenly top-to-bottom */
+  padding: 20px 0;
+}
+
+.guide-item.large {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
+  font-size: 1.1rem;
+}
+
+/* Main column layout to push status to the bottom */
+.main-column.flex-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.flex-grow {
+  flex: 1;
+}
+
+/* Make result/status card wider to match the Command Center */
+.full-width {
+  width: 100%;
+  box-sizing: border-box;
+}
+/* Success Toast */
+.toast-notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--secondary);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  animation: slideInDown 0.4s ease-out;
+}
+
+/* Quick Action Chips */
+.chips-container {
+  margin-top: 20px;
+  animation: fadeIn 0.8s ease-in;
+}
+
+/* Toast Notification Style */
+.toast-notification {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981; /* Success Green */
+  color: white;
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  animation: slideInDown 0.4s ease-out;
+}
+
+/* Suggestion Chips */
+.chip {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  transition: 0.2s;
+}
+
+.chip:hover {
+  background: #6366f1; /* Primary Purple */
+  transform: translateY(-2px);
+}
+
+@keyframes slideInDown {
+  from { top: -60px; opacity: 0; }
+  to { top: 30px; opacity: 1; }
+}
+.chips-container {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chips-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chips-wrapper {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  background: rgba(129, 140, 248, 0.15); /* Light purple tint */
+  border: 1px solid rgba(129, 140, 248, 0.3);
+  color: var(--text-main); /* Dynamically switches with theme */
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Visibility fix for Light Mode */
+[data-theme="light"] .chip {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.2);
+  color: #4338ca; /* Deep indigo for readability */
+}
+
+.chip:hover {
+  background: var(--primary);
+  color: white !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.pulse-dot.active {
+  background-color: #10b981; /* Success Green */
+  animation: statusPulse 0.5s infinite; /* Faster pulse */
+  box-shadow: 0 0 10px #10b981;
+}
