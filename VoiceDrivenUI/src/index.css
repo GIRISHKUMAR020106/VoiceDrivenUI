@@ -1,28 +1,61 @@
 :root {
-  /* --- Modern Mesh Gradient Background --- */
-  --bg-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-              radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-              radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
-  --bg-color: #0f172a; /* Dark fallback */
+  /* =========================================
+     THEME VARIABLES (DARK MODE DEFAULT)
+  ========================================= */
+  --bg-color: #020617; /* Deeper, richer black/blue base */
+
+  /* COMPLEX "AURORA" MESH GRADIENT */
+  --bg-gradient: 
+    /* 1. Subtle Noise Texture overlay for premium feel */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E"),
+    /* 2. Top Left: Deep Purple/Indigo Glow */
+    radial-gradient(at 10% 10%, rgba(99, 102, 241, 0.25) 0px, transparent 50%),
+    /* 3. Bottom Right: Cyan/Blue Glow */
+    radial-gradient(at 90% 90%, rgba(34, 211, 238, 0.15) 0px, transparent 50%),
+    /* 4. Center Right: Magenta/Pink Accent */
+    radial-gradient(at 80% 20%, rgba(217, 70, 239, 0.15) 0px, transparent 40%),
+    /* 5. Base Linear Gradient (Deep slate to midnight blue) */
+    linear-gradient(to bottom right, #0f172a, #1e1b4b);
+
   
-  /* --- Glassmorphism Variables --- */
-  --card-bg: rgba(30, 41, 59, 0.6);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-  --text-main: #f1f5f9;
+  /* Glass Cards */
+  --card-bg: rgba(30, 41, 59, 0.65); /* Slightly more transparent */
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.05);
+  
+  /* Text & Colors */
+  --text-main: #f8fafc;
   --text-muted: #94a3b8;
   --primary: #818cf8;
   --accent: #c084fc;
+  --danger: #ef4444;
   --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
-/* Light Mode Overrides */
 [data-theme="light"] {
-  --bg-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
-  --bg-color: #f8fafc;
+  /* =========================================
+     LIGHT MODE VARIABLES
+  ========================================= */
+  --bg-color: #ffffff;
+
+  /* AIRY HOLOGRAPHIC GRADIENT */
+  --bg-gradient: 
+    /* 1. Subtle Noise Texture */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E"),
+    /* 2. Top Left: Soft Purple */
+    radial-gradient(at 0% 0%, rgba(167, 139, 250, 0.2) 0px, transparent 50%),
+    /* 3. Bottom Right: Soft Blue */
+    radial-gradient(at 100% 100%, rgba(96, 165, 250, 0.2) 0px, transparent 50%),
+    /* 4. Center: Very soft Pink/Yellow hint */
+    radial-gradient(at 50% 50%, rgba(251, 207, 232, 0.15) 0px, transparent 40%),
+    /* 5. Base Linear Gradient (Clean white to very pale blue) */
+    linear-gradient(to bottom right, #f8fafc, #eef2ff);
+
   --card-bg: rgba(255, 255, 255, 0.65);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.6);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.4);
+  --glass-highlight: rgba(255, 255, 255, 0.2);
   --text-main: #1e293b;
-  --text-muted: #475569;
+  --text-muted: #64748b;
   --primary: #4f46e5;
   --accent: #7c3aed;
   --shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
@@ -30,24 +63,26 @@
 
 body {
   margin: 0;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: var(--bg-color);
-  background-image: var(--bg-image);
+  /* Apply the complex gradient */
+  background-image: var(--bg-gradient);
   background-attachment: fixed;
   background-size: cover;
+  background-repeat: no-repeat;
   color: var(--text-main);
   min-height: 100vh;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-/* --- Main Layout Grid --- */
+/* --- Layout Grid --- */
 .container {
   max-width: 1100px;
   margin: 0 auto;
   padding: 40px 20px;
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Equal columns */
-  gap: 30px;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
   align-items: stretch; /* CRITICAL: Makes both columns equal height */
 }
 
@@ -55,55 +90,73 @@ body {
   .container { grid-template-columns: 1fr; }
 }
 
-/* --- Common Card Styling --- */
+/* --- Glass Card Base --- */
 .card {
   background: var(--card-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px); /* Increased blur for deeper glass effect */
+  -webkit-backdrop-filter: blur(24px);
   border: var(--glass-border);
   border-radius: 24px;
   padding: 30px;
   box-shadow: var(--shadow);
-  transform-style: preserve-3d;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  /* Ensure texture doesn't show through cards too much */
+  position: relative;
+  z-index: 1;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-}
-
-/* --- Flex Column Helper for Right Side --- */
-.flex-col-stretch {
+/* --- Typography & Elements --- */
+h3 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  color: var(--primary);
   display: flex;
-  flex-direction: column;
-  justify-content: center; /* Centers content vertically */
-  height: 100%; /* Fills the grid cell */
-  box-sizing: border-box;
+  align-items: center;
+  gap: 12px;
 }
 
-/* --- Inputs & Buttons --- */
-h3 { margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 10px; font-size: 1.2rem; }
+ul.guide-list {
+  padding-left: 0;
+  list-style: none;
+}
+ul.guide-list li {
+  margin-bottom: 15px;
+  padding: 12px;
+  background: var(--glass-highlight);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+ul.guide-list li:hover {
+    border-color: var(--primary);
+}
+ul.guide-list strong { color: var(--text-main); margin-right: 8px; }
+
+/* --- Inputs --- */
+.input-wrapper { display: flex; gap: 12px; margin-bottom: 20px; }
 
 input[type="text"] {
   width: 100%;
   padding: 16px;
   border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.1);
   background: rgba(255,255,255,0.05);
   color: var(--text-main);
   font-size: 1rem;
-  box-sizing: border-box;
   outline: none;
   transition: all 0.2s;
 }
 input[type="text"]:focus {
-  border-color: var(--accent);
-  background: rgba(255,255,255,0.1);
-  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2);
+  border-color: var(--primary);
+  background: var(--glass-highlight);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
 }
 
-button { border: none; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+/* --- Buttons --- */
+button { cursor: pointer; border: none; font-weight: 600; transition: all 0.2s; }
 
 .btn-primary {
   background: linear-gradient(135deg, var(--primary), var(--accent));
@@ -111,40 +164,41 @@ button { border: none; cursor: pointer; font-weight: 600; transition: all 0.2s; 
   padding: 0 24px;
   border-radius: 14px;
   font-size: 1.2rem;
-  display: flex;
-  align-items: center;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3); /* Added soft glow shadow */
 }
-.btn-primary:hover { filter: brightness(1.1); transform: scale(1.05); }
+.btn-primary:hover { filter: brightness(1.1); transform: scale(1.05); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5); }
 
 .btn-mic {
   width: 100%;
-  padding: 20px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.05);
+  padding: 24px;
+  border-radius: 20px;
+  background: var(--glass-highlight);
   border: 1px dashed var(--text-muted);
   color: var(--text-muted);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
   font-size: 1.1rem;
-  margin-top: auto; /* Pushes to bottom if flex container allows */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
-.btn-mic:hover { background: rgba(255,255,255,0.1); color: var(--text-main); border-color: var(--text-main); }
-.btn-mic.recording { 
-  background: rgba(239, 68, 68, 0.1); 
-  border: 1px solid #ef4444; 
-  color: #ef4444; 
-  animation: pulse 1.5s infinite; 
+.btn-mic:hover { background: rgba(255,255,255,0.1); color: var(--text-main); border-color: var(--primary); }
+.btn-mic.recording {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  animation: pulse 1.5s infinite;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); /* Red glow when recording */
 }
 
-@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
-
-/* Results */
-.result-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.result-label { font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; }
-.result-value { font-weight: 700; color: var(--text-main); }
+/* --- Utility Classes --- */
+.flex-col-stretch { display: flex; flex-direction: column; height: 100%; }
+.mt-auto { margin-top: auto; }
+.text-center { text-align: center; }
+.divider { display: flex; align-items: center; margin: 24px 0; color: var(--text-muted); font-size: 0.8rem; }
+.divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.divider span { padding: 0 10px; }
 
 /* --- Animations --- */
-.float-anim { animation: float 6s ease-in-out infinite; }
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.float { animation: float 6s ease-in-out infinite; }
