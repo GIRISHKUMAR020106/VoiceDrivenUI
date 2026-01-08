@@ -35,7 +35,7 @@ export default function Dashboard() {
           {!showHelp ? (
             <button className="big-help-btn" onClick={() => setShowHelp(true)} style={{ width: '100%', height: '100%' }}>
               <div style={{ fontSize: '3.5rem', marginBottom: '20px' }}>💡</div>
-              <span style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>How to Use VoxFi</span>
+              <span style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>How to Use VoxFin</span>
               <p>Click to expand setup guide</p>
             </button>
           ) : (
