@@ -6,7 +6,7 @@ import ResultCard from "../components/ResultCard";
 export default function Dashboard() {
   const [result, setResult] = useState(null);
   const [theme, setTheme] = useState("light");
-
+  
   // Apply theme to document
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
