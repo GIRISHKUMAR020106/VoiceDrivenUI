@@ -213,11 +213,19 @@ button {
   border-color: var(--primary);
 }
 .btn-mic.recording {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid var(--danger);
-  color: var(--danger);
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.18),
+    rgba(239, 68, 68, 0.08)
+  );
+  border: 2px solid rgba(239, 68, 68, 0.55);
+
+  color: #ffe4e6;
+
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+
   animation: pulse 1.5s infinite;
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); /* Red glow when recording */
+  box-shadow: 0 0 18px rgba(239, 68, 68, 0.25);
 }
 
 /* --- Utility Classes --- */
@@ -276,7 +284,7 @@ button {
 /* The Listening State class */
 .is-listening {
   position: relative;
-  background: var(--danger) !important; /* Visual cue that it's "On" */
+  background: var(--danger) !important;
   animation: pulse-red 2s infinite;
 }
 
@@ -351,8 +359,14 @@ button {
 }
 
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Status Pulse Dot */
@@ -367,9 +381,15 @@ button {
 }
 
 @keyframes statusPulse {
-  0% { opacity: 0.3; }
-  50% { opacity: 1; }
-  100% { opacity: 0.3; }
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
 }
 /* Layout Grid */
 .dashboard-grid {
@@ -544,8 +564,14 @@ button {
 }
 
 @keyframes slideInDown {
-  from { top: -60px; opacity: 0; }
-  to { top: 30px; opacity: 1; }
+  from {
+    top: -60px;
+    opacity: 0;
+  }
+  to {
+    top: 30px;
+    opacity: 1;
+  }
 }
 .chips-container {
   margin-top: 12px;
