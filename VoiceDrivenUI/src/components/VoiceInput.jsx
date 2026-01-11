@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import api, { sendTextCommand } from "../services/api";
 import convertWebMToWav from "./../utils/audio_converter";
 
@@ -11,28 +11,51 @@ export default function VoiceInput({ onResult, onProcessStart }) {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
 
+  // ✅ NEW: keep reference to mic stream so we can stop tracks
+  const streamRef = useRef(null);
+
+  // ✅ Helper: stop mic completely (fixes Ubuntu/Windows mic icon staying)
+  const stopMicStream = () => {
+    try {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
+        streamRef.current = null;
+      }
+    } catch (e) {
+      console.warn("Failed to stop mic stream:", e);
+    }
+  };
+
   // -----------------------------
   // START RECORDING
   // -----------------------------
   const startRecording = async () => {
     try {
+      setError(null);
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      // ✅ store stream ref so we can stop it later
+      streamRef.current = stream;
 
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
 
       mediaRecorder.ondataavailable = (e) => {
-        audioChunksRef.current.push(e.data);
+        if (e.data && e.data.size > 0) {
+          audioChunksRef.current.push(e.data);
+        }
       };
 
       mediaRecorder.onstop = handleAudioStop;
 
       mediaRecorder.start();
       setRecording(true);
-      setError(null);
     } catch (err) {
+      console.error(err);
       setError("Microphone access denied");
+      stopMicStream();
     }
   };
 
@@ -40,8 +63,20 @@ export default function VoiceInput({ onResult, onProcessStart }) {
   // STOP RECORDING
   // -----------------------------
   const stopRecording = () => {
-    if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop();
+    try {
+      if (
+        mediaRecorderRef.current &&
+        mediaRecorderRef.current.state !== "inactive"
+      ) {
+        mediaRecorderRef.current.stop(); // triggers handleAudioStop()
+      } else {
+        // If recorder already stopped, still stop mic stream
+        stopMicStream();
+      }
+    } catch (err) {
+      console.error(err);
+      stopMicStream();
+    } finally {
       setRecording(false);
     }
   };
@@ -55,7 +90,15 @@ export default function VoiceInput({ onResult, onProcessStart }) {
     setLoading(true);
 
     try {
-      // Create WAV blob (browser-safe)
+      // ✅ IMPORTANT: stop mic hardware usage FIRST
+      stopMicStream();
+
+      if (!audioChunksRef.current.length) {
+        setError("No audio captured. Please try again.");
+        return;
+      }
+
+      // Convert to wav
       const webmBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
       const wavBlob = await convertWebMToWav(webmBlob);
 
@@ -84,7 +127,6 @@ export default function VoiceInput({ onResult, onProcessStart }) {
     const query = typeof manualText === "string" ? manualText : text;
     if (!query.trim()) return;
 
-    // Notify Dashboard that processing has started
     if (onProcessStart) onProcessStart();
     setLoading(true);
     setError(null);
@@ -92,18 +134,27 @@ export default function VoiceInput({ onResult, onProcessStart }) {
     try {
       const response = await sendTextCommand(query);
       onResult(response);
-      setText(""); // Clear input on success
+      setText("");
     } catch (err) {
+      console.error(err);
       setError("Server error");
     } finally {
       setLoading(false);
     }
   };
 
+  // ✅ Cleanup on unmount (prevents mic stuck if user changes page)
+  useEffect(() => {
+    return () => {
+      stopMicStream();
+    };
+  }, []);
+
   return (
     <div className="card flex-col-stretch float">
       <h3>🎙️ Command Center</h3>
 
+      {/* TEXT INPUT */}
       <div className="input-wrapper">
         <input
           type="text"
@@ -118,26 +169,32 @@ export default function VoiceInput({ onResult, onProcessStart }) {
         </button>
       </div>
 
-      {/* Suggestion Chips Section */}
-      <div className="chips-container" style={{ marginTop: '12px' }}>
-        <div className="chips-wrapper" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          {["Check balance", "Spent 50 on fuel", "Show my budget"].map((cmd) => (
-            <button 
-              key={cmd} 
-              className="chip" 
-              onClick={() => handleSendText(cmd)} 
-              disabled={loading}
-            >
-              {cmd}
-            </button>
-          ))}
+      {/* Suggestion Chips */}
+      <div className="chips-container" style={{ marginTop: "12px" }}>
+        <div
+          className="chips-wrapper"
+          style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}
+        >
+          {["Check balance", "Spent 50 on fuel", "Show my budget"].map(
+            (cmd) => (
+              <button
+                key={cmd}
+                className="chip"
+                onClick={() => handleSendText(cmd)}
+                disabled={loading}
+              >
+                {cmd}
+              </button>
+            )
+          )}
         </div>
       </div>
 
-      <div className="divider" style={{ marginTop: '20px' }}>
+      <div className="divider" style={{ marginTop: "20px" }}>
         <span>OR USE VOICE</span>
       </div>
 
+      {/* VOICE BUTTON */}
       <button
         className={`btn-mic ${recording ? "recording is-listening" : ""}`}
         onClick={recording ? stopRecording : startRecording}
@@ -146,7 +203,15 @@ export default function VoiceInput({ onResult, onProcessStart }) {
         {recording ? "⏹ Stop Recording" : "🎙️ Start Speaking"}
       </button>
 
-      {error && <p className="error" style={{ marginTop: '10px', color: '#ef4444' }}>{error}</p>}
+      {loading && (
+        <p style={{ marginTop: "10px", color: "#94a3b8" }}>Processing...</p>
+      )}
+
+      {error && (
+        <p className="error" style={{ marginTop: "10px", color: "#ef4444" }}>
+          {error}
+        </p>
+      )}
     </div>
   );
 }
